@@ -9,7 +9,7 @@ Currently at Cebi we have to get manually Article and Client data from the ERP A
 
 We wanted to make this process automatically, without any human intervention.
 
-My job was first to create this script that with a XLSK file insert data into both Table.
+My job was first to create this script that with a XLSX file insert data into both Table.
 Then to configurate Chron in linux to run this script one time per day automatically.
 
 
