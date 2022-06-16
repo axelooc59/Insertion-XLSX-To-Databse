@@ -60,28 +60,28 @@ try:
 
 
 
-        #inserting data to the table COD_ARTICLES
-        # sql = "DELETE FROM TEST_ARTICLES "
-        # cursor.execute(sql)
-        # connection.commit()
-        # print(cursor.rowcount, "record(s) was deleted in COD_ARTICLES.")
-        # f.write( f"{cursor.rowcount} record(s) was deleted in COD_ARTICLES.\n")
-        # #inserting new data
-        # sql = "INSERT INTO TEST_ARTICLES VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-        # val=[]
-        # for i in range(len(cod_art)):
-        #     elt=[str(e) for e in cod_art.iloc[i,:]]
-        #     elt = list(map(lambda x: x.replace('nan', ''), elt))
-        #     val.append(tuple(elt))
-        # try:
-            # cursor.executemany(sql, val)
-            # print(cursor.rowcount, "was inserted in COD_ARTICLES.")
-            # f.write(f"{cursor.rowcount} was inserted in COD_ARTICLES.\n")
-        # except Exception as e:
-        #     print('Insert Error in COD_ARTICLES:', e)
-        #     f.write(f'Insert Error in COD_ARTICLES:{e}')
-        # connection.commit()
-        #f.close()
+        inserting data to the table COD_ARTICLES
+         sql = "DELETE FROM TEST_ARTICLES "
+         cursor.execute(sql)
+         connection.commit()
+         print(cursor.rowcount, "record(s) was deleted in COD_ARTICLES.")
+         f.write( f"{cursor.rowcount} record(s) was deleted in COD_ARTICLES.\n")
+         #inserting new data
+         sql = "INSERT INTO TEST_ARTICLES VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+         val=[]
+         for i in range(len(cod_art)):
+             elt=[str(e) for e in cod_art.iloc[i,:]]
+             elt = list(map(lambda x: x.replace('nan', ''), elt))
+             val.append(tuple(elt))
+         try:
+           # cursor.executemany(sql, val)
+           # print(cursor.rowcount, "was inserted in COD_ARTICLES.")
+           # f.write(f"{cursor.rowcount} was inserted in COD_ARTICLES.\n")
+         except Exception as e:
+             print('Insert Error in COD_ARTICLES:', e)
+             f.write(f'Insert Error in COD_ARTICLES:{e}')
+         connection.commit()
+        f.close()
         
          
 
