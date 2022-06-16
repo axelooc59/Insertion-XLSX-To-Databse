@@ -2,7 +2,7 @@ import mysql.connector
 import pandas as pd
 from datetime import datetime
 cod_client=pd.read_excel("Client_AS400.xlsx")
-#cod_art=pd.read_excel("Article_AS400.xlsx")
+cod_art=pd.read_excel("Article_AS400.xlsx")
 #filtering useless data  
 cod_client=cod_client[cod_client.iloc[:,-6:].isna().sum(axis=1)!=6]
 now = datetime.now()
@@ -60,7 +60,7 @@ try:
 
 
 
-        inserting data to the table COD_ARTICLES
+        #inserting data to the table COD_ARTICLES
          sql = "DELETE FROM TEST_ARTICLES "
          cursor.execute(sql)
          connection.commit()
@@ -74,9 +74,9 @@ try:
              elt = list(map(lambda x: x.replace('nan', ''), elt))
              val.append(tuple(elt))
          try:
-           # cursor.executemany(sql, val)
-           # print(cursor.rowcount, "was inserted in COD_ARTICLES.")
-           # f.write(f"{cursor.rowcount} was inserted in COD_ARTICLES.\n")
+            cursor.executemany(sql, val)
+            print(cursor.rowcount, "was inserted in COD_ARTICLES.")
+            f.write(f"{cursor.rowcount} was inserted in COD_ARTICLES.\n")
          except Exception as e:
              print('Insert Error in COD_ARTICLES:', e)
              f.write(f'Insert Error in COD_ARTICLES:{e}')
