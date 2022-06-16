@@ -12,6 +12,11 @@ We wanted to make this process automatically, without any human intervention.
 My job was first to create this script that with a XLSX file insert data into both Table.
 Then to configurate Chron in linux to run this script one time per day automatically.
 
+Notes:
+It generate a Log file when you can see what the scrypt done and weither he succeed or not
+
+
+
 
 
 
