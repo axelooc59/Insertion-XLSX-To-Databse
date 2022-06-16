@@ -1,7 +1,7 @@
 # Script python to insert Data from an excel file in a MySQL DB
-Using mysql.connector library 
+Using *mysql.connector library* 
 
-Script was made in the context of my internship at CEBI Luxembourg
+Script was made in the context of my internship at **CEBI Luxembourg**
 
 Goal of this script :
 
