@@ -1,2 +1,2 @@
-# Insertion-XLSX-To-Databse
+# Insertion-XLSX data-To-Databse
 Using mysql.connector in python to insert Data from an excel file in a MySQL DB
