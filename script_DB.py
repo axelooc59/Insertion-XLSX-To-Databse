@@ -1,25 +1,44 @@
 import mysql.connector
 import pandas as pd
 from datetime import datetime
-cod_client=pd.read_excel("Client_AS400.xlsx")
+import shutil
+
+
+
+#filtering useless data 
+
+
+#function --------------------
+
+def filter_client(data) :
+    if(data.shape[1]==10) :
+         return data[data.iloc[:,-6:].isna().sum(axis=1)!=6]
+    else: 
+        return data
+#-------------------------
+
+
+cod_client=filter_client(pd.read_excel("Client_AS400.xlsx"))
 cod_art=pd.read_excel("Article_AS400.xlsx")
-#filtering useless data  
-cod_client=cod_client[cod_client.iloc[:,-6:].isna().sum(axis=1)!=6]
+
+
+
+
 now = datetime.now()
 dt_string = now.strftime("%d_%m_%Y_%H_%M_%S")
 logfile= "logInsert_"+dt_string+".log"
-print()
-print("date and time =", dt_string)	
+
+
 f=open(logfile,"a")
 f.write(f"Operation times :{now.strftime('%d/%m/%Y %H:%M:%S')}\n")
 
 
 #connecting to databse
 try:
-    connection = mysql.connector.connect(host='xx',
-                                         database='xx',
-                                         user='xx',
-                                         password='xx')
+    connection = mysql.connector.connect(host='10.11.2.74',
+                                         database='EDI_PORTAL',
+                                         user='ediuser',
+                                         password='Cebi-2021')
 
     if connection.is_connected():
         db_Info = connection.get_server_info()
@@ -39,19 +58,55 @@ try:
         print(cursor.rowcount, "record(s) was deleted in COD_CLIENTS.")
         f.write( f"{cursor.rowcount} record(s) was deleted in COD_CLIENTS.\n")
         
-        sql = "INSERT INTO TEST_COD_CLIENTS VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        sql = "INSERT INTO COD_CLIENTS VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         val=[]
-        for i in range(len(cod_client)):
-            elt=[str(e) for e in cod_client.iloc[i,:]]
-            elt = list(map(lambda x: x.replace('nan', ''), elt))
-            val.append(tuple(elt))
+        if(cod_client.shape[1]==10):
+            for i in range(len(cod_client)):
+                elt=[str(e) for e in cod_client.iloc[i,:]]
+                elt = list(map(lambda x: x.replace('nan', ''), elt))
+                val.append(tuple(elt))
+        
+
         try:
+            if(cod_client.shape[1]!=10):
+                raise ValueError('File contain wrong number of column')
             cursor.executemany(sql, val)
             print(cursor.rowcount, " record(s) was inserted in COD_CLIENTS.")
             f.write(f"{cursor.rowcount} record(s) was inserted in COD_CLIENTS.\n")
+            #we overwrite the last backup file with the new one¨
+            original=r'Client_AS400.xlsx'
+            target=r'C:\Users\axgontie\Desktop\axel_gontier\scripts_ddbb\scripts_ddbb\backup\Client_AS400_backup.xlsx'
+            shutil.copyfile(original,target)
+            f.write("Succesfully replace backup Client file\n")
+            
+
         except Exception as e:
+            #we add the data from the file in /backup as we have deleted all line in the table without inserting any
             print('Insert Error in COD_CLIENTS:', e)
-            f.write(f'Insert Error in COD_CLIENTS:{e}')
+            f.write(f'Insert Error in COD_CLIENTS:{e}\n Inserting backup client file into the table\n')
+            
+            cod_client=filter_client(pd.read_excel("backup/Client_AS400_backup.xlsx"))
+            try:
+                sql = "INSERT INTO COD_CLIENTS VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                val=[]
+                for i in range(len(cod_client)):
+                    elt=[str(e) for e in cod_client.iloc[i,:]]
+                    elt = list(map(lambda x: x.replace('nan', ''), elt))
+                    val.append(tuple(elt))
+
+        
+                cursor.executemany(sql, val)
+                print(cursor.rowcount, " record(s) from BACKUP was inserted in COD_CLIENTS.")
+                f.write(f"{cursor.rowcount} record(s) from BACKUP was inserted in COD_CLIENTS.\n")
+            except Exception as e:
+                print('Insert backup Error in COD_CLIENTS:', e)
+                f.write(f'Insert backup Error in COD_CLIENTS:{e}\n')
+            
+
+
+
+
+
         connection.commit()
         
 
@@ -77,9 +132,33 @@ try:
             cursor.executemany(sql, val)
             print(cursor.rowcount, " record(s) was inserted in COD_ARTICLES.")
             f.write(f"{cursor.rowcount} record(s) was inserted in COD_ARTICLES.\n")
+            #we overwrite the last backup file with the new one
+            original=r'Article_AS400.xlsx'
+            target=r'C:\Users\axgontie\Desktop\axel_gontier\scripts_ddbb\scripts_ddbb\backup\Article_AS400_backup.xlsx'
+            shutil.copyfile(original,target)
+            f.write("Succesfully replace backup Article file\n")
         except Exception as e:
-            print('Insert Error in COD_ARTICLES:', e)
-            f.write(f'Insert Error in COD_ARTICLES:{e}')
+                #we add the data from the file in /backup as we have deleted all line in the table without inserting any
+                print('Insert Error in COD_ARTICLES:', e)
+                f.write(f'Insert Error in COD_ARTICLES:{e}\n Inserting backup client file into the table\n')
+                
+                cod_article=pd.read_excel("backup/Article_AS400_backup.xlsx")
+                try:
+                    sql = "INSERT INTO COD_ARTICLES VALUES (%s, %s, %s)"
+                    val=[]
+                    for i in range(len(cod_article)):
+                        elt=[str(e) for e in cod_article.iloc[i,:]]
+                        elt = list(map(lambda x: x.replace('nan', ''), elt))
+                        val.append(tuple(elt))
+
+            
+                    cursor.executemany(sql, val)
+                    print(cursor.rowcount, " record(s)  from BACKUP was inserted in COD_ARTICLES.")
+                    f.write(f"{cursor.rowcount} record(s) from BACKUP was inserted in COD_ARTICLES.\n")
+                except Exception as e:
+                    print('Insert backup Error in COD_ARTICLES:', e)
+                    f.write(f'Insert backup Error in COD_ARTICLES:{e}\n')
+
         connection.commit()
         f.close()
         
