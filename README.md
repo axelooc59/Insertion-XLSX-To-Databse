@@ -13,7 +13,9 @@ My job was first to create this script that with a XLSX file insert data into bo
 Then to configurate Chron in linux to run this script one time per day automatically.
 
 Notes:
-It generate a Log file when you can see what the scrypt done and weither he succeed or not
+- It generate a Log file when you can see what the scrypt done and weither he succeed or not
+- Back up support avoid to let table void after getting a possible exception during insertion. We use for that the last file which been succesfully inserted.When we succed a new insertion we replace the old backup file with the new one.
+ 
 
 
 
