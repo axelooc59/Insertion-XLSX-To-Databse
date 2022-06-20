@@ -16,10 +16,10 @@ f.write(f"Operation times :{now.strftime('%d/%m/%Y %H:%M:%S')}\n")
 
 #connecting to databse
 try:
-    connection = mysql.connector.connect(host='XXXX',
-                                         database='EDI_PORTAL',
-                                         user='XXX',
-                                         password='XXX')
+    connection = mysql.connector.connect(host='xx',
+                                         database='xx',
+                                         user='xx',
+                                         password='xx')
 
     if connection.is_connected():
         db_Info = connection.get_server_info()
@@ -33,7 +33,7 @@ try:
 
        
         
-        sql = "DELETE FROM TEST_COD_CLIENTS "
+        sql = "DELETE FROM COD_CLIENTS "
         cursor.execute(sql)
         connection.commit()
         print(cursor.rowcount, "record(s) was deleted in COD_CLIENTS.")
@@ -47,8 +47,8 @@ try:
             val.append(tuple(elt))
         try:
             cursor.executemany(sql, val)
-            print(cursor.rowcount, "was inserted in COD_CLIENTS.")
-            f.write(f"{cursor.rowcount} was inserted in COD_CLIENTS.\n")
+            print(cursor.rowcount, " record(s) was inserted in COD_CLIENTS.")
+            f.write(f"{cursor.rowcount} record(s) was inserted in COD_CLIENTS.\n")
         except Exception as e:
             print('Insert Error in COD_CLIENTS:', e)
             f.write(f'Insert Error in COD_CLIENTS:{e}')
@@ -61,26 +61,26 @@ try:
 
 
         #inserting data to the table COD_ARTICLES
-         sql = "DELETE FROM TEST_ARTICLES "
-         cursor.execute(sql)
-         connection.commit()
-         print(cursor.rowcount, "record(s) was deleted in COD_ARTICLES.")
-         f.write( f"{cursor.rowcount} record(s) was deleted in COD_ARTICLES.\n")
-         #inserting new data
-         sql = "INSERT INTO TEST_ARTICLES VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-         val=[]
-         for i in range(len(cod_art)):
-             elt=[str(e) for e in cod_art.iloc[i,:]]
-             elt = list(map(lambda x: x.replace('nan', ''), elt))
-             val.append(tuple(elt))
-         try:
+        sql = "DELETE FROM COD_ARTICLES "
+        cursor.execute(sql)
+        connection.commit()
+        print(cursor.rowcount, "record(s) was deleted in COD_ARTICLES.")
+        f.write( f"{cursor.rowcount} record(s) was deleted in COD_ARTICLES.\n")
+        #inserting new data
+        sql = "INSERT INTO COD_ARTICLES VALUES (%s, %s, %s)"
+        val=[]
+        for i in range(len(cod_art)):
+            elt=[str(e) for e in cod_art.iloc[i,:]]
+            elt = list(map(lambda x: x.replace('nan', ''), elt))
+            val.append(tuple(elt))
+        try:
             cursor.executemany(sql, val)
-            print(cursor.rowcount, "was inserted in COD_ARTICLES.")
-            f.write(f"{cursor.rowcount} was inserted in COD_ARTICLES.\n")
-         except Exception as e:
-             print('Insert Error in COD_ARTICLES:', e)
-             f.write(f'Insert Error in COD_ARTICLES:{e}')
-         connection.commit()
+            print(cursor.rowcount, " record(s) was inserted in COD_ARTICLES.")
+            f.write(f"{cursor.rowcount} record(s) was inserted in COD_ARTICLES.\n")
+        except Exception as e:
+            print('Insert Error in COD_ARTICLES:', e)
+            f.write(f'Insert Error in COD_ARTICLES:{e}')
+        connection.commit()
         f.close()
         
          
