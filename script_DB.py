@@ -129,6 +129,8 @@ try:
             elt = list(map(lambda x: x.replace('nan', ''), elt))
             val.append(tuple(elt))
         try:
+            if(cod_art.shape[1]!=3):
+                raise ValueError('File contain wrong number of column')
             cursor.executemany(sql, val)
             print(cursor.rowcount, " record(s) was inserted in COD_ARTICLES.")
             f.write(f"{cursor.rowcount} record(s) was inserted in COD_ARTICLES.\n")
@@ -160,15 +162,7 @@ try:
                     f.write(f'Insert backup Error in COD_ARTICLES:{e}\n')
 
         connection.commit()
-        f.close()
-        
-         
-
-
-
-
-
-                                
-except Error as e:
+        f.close()                              
+except Exception as e:
     print("Error while connecting to MySQL", e)    
 
