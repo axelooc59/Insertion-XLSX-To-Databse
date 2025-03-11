@@ -36,9 +36,9 @@ f.write(f"Operation times :{now.strftime('%d/%m/%Y %H:%M:%S')}\n")
 #connecting to databse
 try:
     connection = mysql.connector.connect(host='10.11.2.74',
-                                         database='EDI_PORTAL',
+                                         database='EDI_XX',
                                          user='ediuser',
-                                         password='Cebi-2021')
+                                         password='XX')
 
     if connection.is_connected():
         db_Info = connection.get_server_info()
